@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تطبيق لمسة شمع - لوحة الإدارة</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --deep-pink: #d9788f; --light-pink: #f4b6c2; }
+    body { background-color: #fff5f6; font-family: 'Cairo', sans-serif; margin: 0; padding: 10px; color: #4a3e3d; }
+    .header { background: linear-gradient(135deg, var(--light-pink), var(--deep-pink)); color: white; text-align: center; padding: 12px; border-radius: 12px; font-weight: 800; font-size: 15px; margin-bottom: 10px; }
+    .card { background: white; padding: 12px; border-radius: 14px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); margin-bottom: 12px; border: 1px solid #f3dce0; }
+    .title { font-weight: 700; font-size: 14px; text-align: center; margin-bottom: 10px; color: var(--deep-pink); }
+    .form-group { margin-bottom: 8px; }
+    label { display: block; font-size: 11px; font-weight: bold; margin-bottom: 3px; color: #666; }
+    input, textarea { width: 100%; padding: 8px; border: 1px solid #e0b8c0; border-radius: 8px; box-sizing: border-box; font-family: inherit; font-size: 12px; }
+    .btn-primary { background: linear-gradient(135deg, var(--light-pink), var(--deep-pink)); color: white; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; margin-top: 5px; }
+    .btn-whatsapp { background: #25D366; color: white; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; cursor: pointer; margin-top: 5px; }
+    
+    .prod-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+    .prod-info { display: flex; align-items: center; gap: 8px; }
+    .prod-thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; border: 1px solid #f2c4d0; }
+    .btn-edit { background: #e3a857; color: white; border: none; border-radius: 6px; padding: 4px 8px; margin-left: 3px; cursor: pointer; font-size: 11px; }
+    .btn-del { background: #e74c3c; color: white; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 11px; }
+
+    .alert-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(2px); z-index: 500; justify-content: center; align-items: center; padding: 15px; }
+    .alert-box { background: #fff; border-radius: 16px; padding: 15px; text-align: center; max-width: 300px; width: 100%; border: 2px solid var(--light-pink); }
+    .alert-title { color: var(--deep-pink); font-weight: bold; font-size: 14px; margin-bottom: 8px; }
+    .alert-btn { background: var(--deep-pink); color: white; border: none; padding: 8px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+  <div class="header">تطبيق لمسة شمع - لوحة الإدارة</div>
+
+  <!-- تعيين رقم الواتساب بدون رقم مسبق -->
+  <div class="card">
+    <div class="title">💬 تعيين رقم الواتساب المخصص لاستقبال الطلبات</div>
+    <div class="form-group">
+      <label>رقم الهاتف (أدخله لاحقاً مع رمز الدولة بدون +)</label>
+      <input type="text" id="waPhone" placeholder="مثال: 905XXXXXXXXX">
+    </div>
+    <button class="btn-whatsapp" onclick="saveWhatsApp()">تحديث وحفظ رقم الواتساب</button>
+  </div>
+
+  <div class="card">
+    <div class="title" id="formTitle">إضافة منتج جديد</div>
+    <input type="hidden" id="editIndex" value="-1">
+    
+    <div class="form-group">
+      <label>اسم المنتج</label>
+      <input type="text" id="pName" placeholder="اسم الشمعة">
+    </div>
+    <div class="form-group">
+      <label>الوصف التفصيلي</label>
+      <textarea id="pDesc" rows="2" placeholder="شموع مصنوعة بحب وعناية..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>السعر الأساسي الحقيقي (TL)</label>
+      <input type="number" id="pPrice" placeholder="120">
+    </div>
+    <div class="form-group">
+      <label>سعر الخصم الحرفي [اختياري] (TL)</label>
+      <input type="number" id="pDiscount" placeholder="100">
+    </div>
+    <div class="form-group">
+      <label>صورة المنتج (من معرض الجهاز)</label>
+      <input type="file" id="pImgFile" accept="image/*">
+    </div>
+    <button class="btn-primary" onclick="saveProduct()" id="btnSave">نشر على المتجر الإلكتروني</button>
+  </div>
+
+  <div class="card">
+    <div class="title">المنتجات الحالية وسجل الأسعار</div>
+    <div id="productsList"></div>
+  </div>
+
+  <div class="alert-modal" id="alertModal">
+    <div class="alert-box">
+      <div class="alert-title">✨ لمسة شمع</div>
+      <div id="alertMsg" style="font-size:12px; color:#555;"></div>
+      <button class="alert-btn" onclick="closeAlert()">حسناً</button>
+    </div>
+  </div>
+
+  <script>
+    let base64Image = "";
+
+    function showAlert(msg) {
+      document.getElementById("alertMsg").innerText = msg;
+      document.getElementById("alertModal").style.display = "flex";
+    }
+    function closeAlert() { document.getElementById("alertModal").style.display = "none"; }
+
+    // تحميل الرقم المحفوظ في المتصفح إن وجد (افتراضياً فارغ)
+    document.getElementById("waPhone").value = localStorage.getItem("ls_whatsapp") || "";
+
+    function saveWhatsApp() {
+      const num = document.getElementById("waPhone").value.trim();
+      localStorage.setItem("ls_whatsapp", num);
+      if (num === "") {
+        showAlert("تم إزالة رقم الواتساب! لن يستطيع المشترون الطلب حتى تضيف رقماً جديداً.");
+      } else {
+        showAlert("تم تحديث وحفظ رقم الواتساب بنجاح!");
+      }
+    }
+
+    document.getElementById('pImgFile').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) { base64Image = evt.target.result; };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    function getProducts() {
+      return JSON.parse(localStorage.getItem("ls_products")) || [];
+    }
+
+    function renderList() {
+      const list = document.getElementById("productsList");
+      const products = getProducts();
+      list.innerHTML = "";
+      if (products.length === 0) {
+        list.innerHTML = "<p style='text-align:center; font-size:12px;'>لا توجد منتجات مضافة.</p>";
+        return;
+      }
+      products.forEach((p, index) => {
+        const priceLog = p.discountPrice 
+          ? `القديم: <span style="text-decoration:line-through; color:#999;">${p.price} TL</span> ➔ <span style="color:var(--deep-pink); font-weight:bold;">الخصم: ${p.discountPrice} TL</span>`
+          : `السعر: <span style="color:var(--deep-pink); font-weight:bold;">${p.price} TL</span>`;
+
+        list.innerHTML += `
+          <div class="prod-item">
+            <div class="prod-info">
+              <img src="${p.img || 'https://via.placeholder.com/150'}" class="prod-thumb" alt="صورة">
+              <div>
+                <strong>${p.name}</strong><br>
+                <small style="font-size:10px;">${priceLog}</small>
+              </div>
+            </div>
+            <div>
+              <button class="btn-edit" onclick="editProduct(${index})">تعديل</button>
+              <button class="btn-del" onclick="deleteProduct(${index})">حذف</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    function saveProduct() {
+      const name = document.getElementById("pName").value;
+      const desc = document.getElementById("pDesc").value;
+      const price = document.getElementById("pPrice").value;
+      const discountPrice = document.getElementById("pDiscount").value;
+      const editIndex = parseInt(document.getElementById("editIndex").value);
+
+      if (!name || !price) return showAlert("يرجى إدخال اسم الشمعة والسعر الأساسي!");
+
+      let products = getProducts();
+      const productObj = {
+        id: editIndex >= 0 ? products[editIndex].id : Date.now(),
+        name, desc, price, discountPrice: discountPrice || null,
+        img: base64Image || (editIndex >= 0 ? products[editIndex].img : 'https://via.placeholder.com/150')
+      };
+
+      if (editIndex >= 0) {
+        products[editIndex] = productObj;
+        showAlert("تم حفظ التعديلات وتحديث سجل الأسعار بنجاح!");
+      } else {
+        products.push(productObj);
+        showAlert("تم النشر على المتجر الإلكتروني بنجاح!");
+      }
+
+      localStorage.setItem("ls_products", JSON.stringify(products));
+      resetForm();
+      renderList();
+    }
+
+    function editProduct(index) {
+      const p = getProducts()[index];
+      document.getElementById("pName").value = p.name;
+      document.getElementById("pDesc").value = p.desc;
+      document.getElementById("pPrice").value = p.price;
+      document.getElementById("pDiscount").value = p.discountPrice || "";
+      document.getElementById("editIndex").value = index;
+      document.getElementById("formTitle").innerText = "تعديل الشمعة الحالية";
+      document.getElementById("btnSave").innerText = "حفظ التعديلات";
+      base64Image = p.img;
+    }
+
+    function deleteProduct(index) {
+      let products = getProducts();
+      products.splice(index, 1);
+      localStorage.setItem("ls_products", JSON.stringify(products));
+      showAlert("تم حذف المنتج بنجاح");
+      renderList();
+    }
+
+    function resetForm() {
+      document.getElementById("pName").value = "";
+      document.getElementById("pDesc").value = "";
+      document.getElementById("pPrice").value = "";
+      document.getElementById("pDiscount").value = "";
+      document.getElementById("pImgFile").value = "";
+      document.getElementById("editIndex").value = "-1";
+      document.getElementById("formTitle").innerText = "إضافة منتج جديد";
+      document.getElementById("btnSave").innerText = "نشر على المتجر الإلكتروني";
+      base64Image = "";
+    }
+
+    renderList();
+  </script>
+</body>
+</html>
