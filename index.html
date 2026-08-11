@@ -50,10 +50,16 @@
     .btn-buy { background: #25D366; color: #fff; }
 
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 200; justify-content: center; align-items: center; padding: 15px; }
-    .modal-content { background: #fff; width: 100%; max-width: 360px; border-radius: 18px; padding: 15px; }
-    .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; font-size: 12px; }
-    .cart-item img { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; }
-    .btn-checkout { background: #25D366; color: white; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; margin-top: 12px; cursor: pointer; }
+    .modal-content { background: #fff; width: 100%; max-width: 360px; border-radius: 18px; padding: 15px; max-height: 85vh; display: flex; flex-direction: column; }
+    .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+    .cart-item img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
+    
+    .qty-controls { display: flex; align-items: center; gap: 6px; background: #fef0f2; border-radius: 6px; padding: 2px 6px; }
+    .qty-btn { border: none; background: none; color: var(--deep-pink); font-weight: bold; font-size: 14px; cursor: pointer; padding: 0 4px; }
+    .qty-val { font-size: 11px; font-weight: bold; color: #333; }
+
+    .cart-summary { margin-top: 12px; padding-top: 10px; border-top: 2px dashed #f2c4d0; display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; color: var(--deep-pink); }
+    .btn-checkout { background: #25D366; color: white; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; margin-top: 10px; cursor: pointer; }
 
     .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; justify-content: center; align-items: center; flex-direction: column; padding: 15px; }
     .lightbox img { max-width: 90%; max-height: 80vh; border-radius: 15px; }
@@ -107,7 +113,11 @@
         <h4 style="margin:0; color:var(--deep-pink);">🛒 سلة المشتريات</h4>
         <button onclick="closeCart()" style="border:none; background:none; font-size:16px; cursor:pointer;">❌</button>
       </div>
-      <div id="cartItemsList" style="margin-top:10px;"></div>
+      <div id="cartItemsList" style="margin-top:10px; overflow-y:auto; flex:1;"></div>
+      <div class="cart-summary" id="cartTotalSummary">
+        <span>المجموع الكلي:</span>
+        <span id="cartTotalPrice">0 TL</span>
+      </div>
       <button class="btn-checkout" onclick="checkoutAll()">إرسال الطلب الكامل عبر الواتساب 💬</button>
     </div>
   </div>
@@ -137,6 +147,22 @@
     let favorites = [];
     let showOnlyFavs = false;
 
+    // دالة تحويل أرقام الكمية إلى كلمات عربية للتنسيق المطلوب
+    function getQuantityText(num) {
+      const numbersInArabic = {
+        2: "القطعتين",
+        3: "الثلاث قطع",
+        4: "الأربع قطع",
+        5: "الخمس قطع",
+        6: "الست قطع",
+        7: "السبع قطع",
+        8: "الثماني قطع",
+        9: "التسع قطع",
+        10: "العشر قطع"
+      };
+      return numbersInArabic[num] || `${num} قطع`;
+    }
+
     onValue(ref(db, 'products'), (snapshot) => {
       const data = snapshot.val();
       products = [];
@@ -145,6 +171,10 @@
           products.push(data[key]);
         });
       }
+      
+      cart = cart.filter(item => products.some(p => p.id === item.product.id));
+      updateCartBadge();
+      
       renderGrid();
     });
 
@@ -203,9 +233,23 @@
 
     window.addToCart = function(id) {
       const prod = products.find(p => p.id === id);
-      cart.push(prod);
-      document.getElementById("cartBadge").innerText = cart.length;
+      if(!prod) return showToast("عذراً، هذا المنتج غير متوفر حالياً");
+
+      const existingItem = cart.find(item => item.product.id === id);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({ product: prod, quantity: 1 });
+      }
+
+      updateCartBadge();
       showToast(`تمت إضافة "${prod.name}" للسلة`);
+    }
+
+    function updateCartBadge() {
+      const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById("cartBadge").innerText = totalCount;
     }
 
     window.toggleFav = function(id) {
@@ -238,37 +282,74 @@
       if (!whatsappNumber || whatsappNumber.trim() === "") {
         return showToast("هناك تحديث على المعلومات والأسعار، يمكن الطلب لاحقاً");
       }
+      
       const p = products.find(item => item.id === id);
-      const price = p.discountPrice || p.price;
-      const orderText = encodeURIComponent(`مرحباً لمسة شمع 🕯️\nطلب شمعة: ${p.name}\nالسعر: ${price} TL`);
+      if (!p) {
+        return showToast("عذراً، هذا المنتج غير متوفر حالياً");
+      }
+
+      const unitPrice = parseFloat(p.discountPrice || p.price);
+
+      let message = `🌸 *طلب جديد من متجر لمسة شمع* 🌸\n`;
+      message += `-----------------------------------\n`;
+      message += `🕯️ *المنتج:* ${p.name}\n`;
+      message += `🔹 *الكمية:* 1\n`;
+      message += `🔹 *سعر القطعة:* ${unitPrice} TL\n`;
+      message += `-----------------------------------\n`;
+      message += `✨ *المجموع الكلي للفاتورة: ${unitPrice} TL*`;
+
+      const orderText = encodeURIComponent(message);
       window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${orderText}`, '_blank');
     }
 
     window.openCart = function() {
       const list = document.getElementById("cartItemsList");
       list.innerHTML = "";
+      let grandTotal = 0;
+
       if (cart.length === 0) {
         list.innerHTML = "<p style='text-align:center; font-size:12px; color:#888;'>السلة فارغة حالياً.</p>";
+        document.getElementById("cartTotalPrice").innerText = "0 TL";
       } else {
         cart.forEach((item, index) => {
+          const unitPrice = parseFloat(item.product.discountPrice || item.product.price);
+          const itemTotal = unitPrice * item.quantity;
+          grandTotal += itemTotal;
+
           list.innerHTML += `
             <div class="cart-item">
-              <img src="${item.img}" alt="${item.name}">
-              <div style="flex:1; margin-right:8px;">
-                <div style="font-weight:bold;">${item.name}</div>
-                <div style="color:var(--deep-pink); font-weight:bold;">${item.discountPrice || item.price} TL</div>
+              <img src="${item.product.img || 'https://via.placeholder.com/150'}" alt="${item.product.name}">
+              <div style="flex:1; margin:0 8px;">
+                <div style="font-weight:bold; color:#333;">${item.product.name}</div>
+                <div style="color:#888; font-size:10px;">سعر القطعة: ${unitPrice} TL</div>
+                <div style="color:var(--deep-pink); font-weight:bold; font-size:11px;">الإجمالي: ${itemTotal} TL</div>
               </div>
-              <button onclick="removeFromCart(${index})" style="border:none; background:none; cursor:pointer;">🗑️</button>
+              <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
+                <span class="qty-val">${item.quantity}</span>
+                <button class="qty-btn" onclick="updateQuantity(${index}, 1)">+</button>
+              </div>
+              <button onclick="removeFromCart(${index})" style="border:none; background:none; cursor:pointer; margin-right:4px;">🗑️</button>
             </div>
           `;
         });
+        document.getElementById("cartTotalPrice").innerText = `${grandTotal} TL`;
       }
       document.getElementById("cartModal").style.display = "flex";
     }
 
+    window.updateQuantity = function(index, change) {
+      cart[index].quantity += change;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      updateCartBadge();
+      openCart();
+    }
+
     window.removeFromCart = function(index) {
       cart.splice(index, 1);
-      document.getElementById("cartBadge").innerText = cart.length;
+      updateCartBadge();
       openCart();
     }
 
@@ -279,9 +360,45 @@
       if (!whatsappNumber || whatsappNumber.trim() === "") {
         return showToast("هناك تحديث على المعلومات والأسعار، يمكن الطلب لاحقاً");
       }
-      let names = cart.map((item, i) => `${i+1}. ${item.name} (${item.discountPrice || item.price} TL)`).join("\n");
-      let summary = encodeURIComponent(`مرحباً لمسة شمع 🕯️ أود طلب الشموع التالية:\n${names}`);
-      window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${summary}`, '_blank');
+
+      for (let item of cart) {
+        const stillExists = products.some(p => p.id === item.product.id);
+        if (!stillExists) {
+          showToast(`عذراً، المنتج "${item.product.name}" غير متوفر حالياً`);
+          cart = cart.filter(cItem => cItem.product.id !== item.product.id);
+          updateCartBadge();
+          openCart();
+          return;
+        }
+      }
+
+      let grandTotal = 0;
+      let itemsListText = "";
+
+      cart.forEach((item, i) => {
+        const unitPrice = parseFloat(item.product.discountPrice || item.product.price);
+        const itemTotal = unitPrice * item.quantity;
+        grandTotal += itemTotal;
+
+        itemsListText += `${i + 1}. *${item.product.name}*\n`;
+        itemsListText += `   🔹 *الكمية:* ${item.quantity}\n`;
+        itemsListText += `   🔹 *سعر القطعة:* ${unitPrice} TL\n`;
+        
+        // إظهار سطر الإجمالي الفرعي فقط إذا كانت الكمية 2 فأكثر
+        if (item.quantity > 1) {
+          itemsListText += `   💵 *سعر ${getQuantityText(item.quantity)}:* ${itemTotal} TL\n`;
+        }
+        itemsListText += `\n`;
+      });
+
+      let summary = `🌸 *طلب جديد من متجر لمسة شمع* 🌸\n`;
+      summary += `-----------------------------------\n\n`;
+      summary += itemsListText;
+      summary += `-----------------------------------\n`;
+      summary += `✨ *المجموع الكلي للفاتورة: ${grandTotal} TL*`;
+
+      const encodedText = encodeURIComponent(summary);
+      window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedText}`, '_blank');
     }
 
     window.toggleSearch = function() {
