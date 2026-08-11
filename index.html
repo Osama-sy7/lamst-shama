@@ -3,23 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لمسة شمع | Candle Touch</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
-  <style>
+  <title id="pageTitle">لمسة شمع | Candle Touch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@700&family=Cairo:wght@400;600;700;800&family=El+Messiri:wght@700&family=Reem+Kufi:wght@700&family=Tajawal:wght@700&display=swap" rel="stylesheet">
+  <style id="dynamicStyles">
     :root { --primary-pink: #f4b6c2; --deep-pink: #d9788f; --bg-cream: #fff5f6; }
-    * { box-sizing: border-box; font-family: 'Cairo', sans-serif; transition: all 0.2s ease; }
-    body { background: var(--bg-cream); margin: 0; padding-bottom: 60px; color: #4a3e3d; }
+    * { box-sizing: border-box; font-family: 'Cairo', sans-serif; transition: background 0.2s, color 0.2s; }
+    body { background: var(--bg-cream); margin: 0; padding-bottom: 60px; color: #4a3e3d; overflow-x: hidden; }
 
-    .top-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: rgba(255, 255, 255, 0.95); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .nav-title { font-size: 14px; font-weight: 800; color: var(--deep-pink); }
+    .top-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(255, 255, 255, 0.95); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    .nav-title { font-size: 15px; font-weight: 800; color: var(--deep-pink); }
     .nav-actions { display: flex; gap: 8px; align-items: center; }
     
     .icon-btn { background: #ffffff; border: 1px solid #f2c4d0; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; position: relative; text-decoration: none; color: inherit; }
     
-    .insta-btn {
-      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%);
-      border: none;
-    }
+    .insta-btn { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); border: none; }
     .insta-btn svg { width: 18px; height: 18px; fill: white; }
 
     .badge { position: absolute; top: -3px; right: -3px; background: var(--deep-pink); color: white; border-radius: 50%; font-size: 9px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
@@ -27,16 +24,21 @@
     .search-box { display: none; padding: 6px 12px; background: #fff; border-bottom: 1px solid #f2d6dc; }
     .search-box input { width: 100%; padding: 6px 12px; border-radius: 15px; border: 1px solid #e0b8c0; outline: none; font-size: 12px; }
 
-    .hero-banner { background: linear-gradient(135deg, #fce4e8 0%, #f3cad2 100%); margin: 8px 12px; padding: 12px 10px; border-radius: 15px; text-align: center; }
+    .hero-banner { background: linear-gradient(135deg, var(--primary-pink) 0%, #f3cad2 100%); margin: 8px 12px; padding: 14px 10px; border-radius: 15px; text-align: center; }
     .hero-title { font-family: 'Reem Kufi', sans-serif; font-size: 24px; color: var(--deep-pink); margin: 0; }
-    .hero-sub { font-size: 11px; color: #8a5763; margin-top: 2px; font-weight: 600; }
+    .hero-sub { font-size: 11px; color: #8a5763; margin-top: 3px; font-weight: 600; }
+
+    /* بنر العروض والمناسبات */
+    .offer-banner { display: none; background: #fff0f3; border: 2px dashed var(--deep-pink); margin: 8px 12px; padding: 10px; border-radius: 12px; text-align: center; }
+    .offer-title { font-weight: 800; color: var(--deep-pink); font-size: 13px; }
+    .offer-desc { font-size: 11px; color: #555; margin-top: 3px; }
 
     .container { padding: 0 12px; }
-    .section-title { font-size: 14px; font-weight: 700; color: var(--deep-pink); margin: 10px 0 8px; display: flex; align-items: center; justify-content: space-between; }
+    .section-title { font-size: 14px; font-weight: 700; color: var(--deep-pink); margin: 12px 0 8px; display: flex; align-items: center; justify-content: space-between; }
 
     .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .card { background: #ffffff; border-radius: 14px; padding: 8px; box-shadow: 0 4px 12px rgba(217, 120, 143, 0.12); border: 1px solid #f5e1e5; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
-    .card img { width: 100%; height: 105px; object-fit: cover; border-radius: 10px; cursor: pointer; }
+    .card { background: #ffffff; border-radius: 14px; padding: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f5e1e5; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+    .card img { width: 100%; height: 110px; object-fit: cover; border-radius: 10px; cursor: pointer; }
     .card-title { font-weight: 700; font-size: 13px; margin: 6px 0 2px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-desc { font-size: 10px; color: #777; margin-bottom: 6px; height: 26px; overflow: hidden; line-height: 1.3; }
     
@@ -45,9 +47,14 @@
     .curr-price { font-weight: 800; font-size: 14px; color: var(--deep-pink); }
     
     .btn-group { display: flex; gap: 4px; }
-    .btn-action { flex: 1; padding: 6px 4px; border: none; border-radius: 8px; font-weight: bold; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 2px; }
-    .btn-cart { background: #fce4e8; color: var(--deep-pink); }
+    .btn-action { flex: 1; padding: 7px 4px; border: none; border-radius: 8px; font-weight: bold; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 2px; }
+    .btn-cart { background: var(--primary-pink); color: #fff; }
     .btn-buy { background: #25D366; color: #fff; }
+
+    /* تأثير تساقط العناصر */
+    .hearts-container { position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden; display: none; }
+    .heart { position: absolute; font-size: 14px; animation: fall 4s linear infinite; top: -20px; }
+    @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 200; justify-content: center; align-items: center; padding: 15px; }
     .modal-content { background: #fff; width: 100%; max-width: 360px; border-radius: 18px; padding: 15px; max-height: 85vh; display: flex; flex-direction: column; }
@@ -58,7 +65,7 @@
     .qty-btn { border: none; background: none; color: var(--deep-pink); font-weight: bold; font-size: 14px; cursor: pointer; padding: 0 4px; }
     .qty-val { font-size: 11px; font-weight: bold; color: #333; }
 
-    .cart-summary { margin-top: 12px; padding-top: 10px; border-top: 2px dashed #f2c4d0; display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; color: var(--deep-pink); }
+    .cart-summary { margin-top: 12px; padding-top: 10px; border-top: 2px dashed var(--primary-pink); display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; color: var(--deep-pink); }
     .btn-checkout { background: #25D366; color: white; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; margin-top: 10px; cursor: pointer; }
 
     .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; justify-content: center; align-items: center; flex-direction: column; padding: 15px; }
@@ -73,8 +80,10 @@
 </head>
 <body>
 
+  <div class="hearts-container" id="heartsContainer"></div>
+
   <div class="top-header">
-    <div class="nav-title">🌸 لمسة شمع</div>
+    <div class="nav-title" id="navTitle">🌸 لمسة شمع</div>
     <div class="nav-actions">
       <a href="https://www.instagram.com/11yasemin.mum?utm_source=qr&igsh=MWUzMnN4bWMxZTAwdA==" target="_blank" class="icon-btn insta-btn" title="حساب إنستغرام">
         <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
@@ -90,8 +99,14 @@
   </div>
 
   <div class="hero-banner">
-    <h1 class="hero-title">لمسة شمع</h1>
-    <div class="hero-sub">✨ نور.. يلامس قلبك ✨</div>
+    <h1 class="hero-title" id="heroTitle">لمسة شمع</h1>
+    <div class="hero-sub" id="heroSub">✨ نور.. يلامس قلبك ✨</div>
+  </div>
+
+  <!-- بنر العروض الترويجية -->
+  <div class="offer-banner" id="offerBanner">
+    <div class="offer-title" id="offerTitleText">🎉 عرض خاص</div>
+    <div class="offer-desc" id="offerDescText"></div>
   </div>
 
   <div class="container">
@@ -147,44 +162,85 @@
     let favorites = [];
     let showOnlyFavs = false;
 
-    // دالة تحويل أرقام الكمية إلى كلمات عربية للتنسيق المطلوب
     function getQuantityText(num) {
       const numbersInArabic = {
-        2: "القطعتين",
-        3: "الثلاث قطع",
-        4: "الأربع قطع",
-        5: "الخمس قطع",
-        6: "الست قطع",
-        7: "السبع قطع",
-        8: "الثماني قطع",
-        9: "التسع قطع",
-        10: "العشر قطع"
+        2: "القطعتين", 3: "الثلاث قطع", 4: "الأربع قطع", 5: "الخمس قطع",
+        6: "الست قطع", 7: "السبع قطع", 8: "الثماني قطع", 9: "التسع قطع", 10: "العشر قطع"
       };
       return numbersInArabic[num] || `${num} قطع`;
     }
 
+    // الاستماع اللحظي للتعديلات
+    onValue(ref(db, 'settings'), (snapshot) => {
+      const data = snapshot.val() || {};
+      whatsappNumber = data.whatsapp || "";
+
+      if(data.storeName) {
+        document.getElementById("navTitle").innerText = "🌸 " + data.storeName;
+        document.getElementById("heroTitle").innerText = data.storeName;
+        document.title = data.storeName;
+      }
+      if(data.storeSub) {
+        document.getElementById("heroSub").innerText = data.storeSub;
+      }
+
+      // تطبيق الألوان والخطوط ديناميكياً
+      if(data.theme) {
+        const root = document.documentElement;
+        root.style.setProperty('--primary-pink', data.theme.primary || '#f4b6c2');
+        root.style.setProperty('--deep-pink', data.theme.deep || '#d9788f');
+        root.style.setProperty('--bg-cream', data.theme.bg || '#fff5f6');
+        if(data.theme.font) document.body.style.fontFamily = data.theme.font;
+
+        // تفعيل تأثير تساقط القلوب
+        if(data.theme.effectSnow) {
+          startHeartsEffect();
+        } else {
+          stopHeartsEffect();
+        }
+      }
+
+      // تفعيل بنر العروض
+      if(data.offer && data.offer.active) {
+        document.getElementById("offerBanner").style.display = "block";
+        document.getElementById("offerTitleText").innerText = data.offer.title || "🎉 عرض خاص";
+        document.getElementById("offerDescText").innerText = data.offer.desc || "";
+      } else {
+        document.getElementById("offerBanner").style.display = "none";
+      }
+    });
+
+    // جلب المنتجات
     onValue(ref(db, 'products'), (snapshot) => {
       const data = snapshot.val();
       products = [];
       if (data) {
-        Object.keys(data).forEach(key => {
-          products.push(data[key]);
-        });
+        Object.keys(data).forEach(key => products.push(data[key]));
       }
-      
       cart = cart.filter(item => products.some(p => p.id === item.product.id));
       updateCartBadge();
-      
       renderGrid();
     });
 
-    onValue(ref(db, 'settings/whatsapp'), (snapshot) => {
-      if (snapshot.exists()) {
-        whatsappNumber = snapshot.val();
-      } else {
-        whatsappNumber = "";
+    function startHeartsEffect() {
+      const container = document.getElementById("heartsContainer");
+      container.style.display = "block";
+      if(container.childElementCount > 0) return;
+      for(let i = 0; i < 15; i++) {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.innerText = ["🌸", "💖", "✨", "🕯️"][Math.floor(Math.random() * 4)];
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.animationDuration = (Math.random() * 3 + 2) + "s";
+        h.style.animationDelay = Math.random() * 2 + "s";
+        container.appendChild(h);
       }
-    });
+    }
+    function stopHeartsEffect() {
+      const container = document.getElementById("heartsContainer");
+      container.style.display = "none";
+      container.innerHTML = "";
+    }
 
     function showToast(text) {
       const toast = document.getElementById("toast");
@@ -236,13 +292,11 @@
       if(!prod) return showToast("عذراً، هذا المنتج غير متوفر حالياً");
 
       const existingItem = cart.find(item => item.product.id === id);
-
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
         cart.push({ product: prod, quantity: 1 });
       }
-
       updateCartBadge();
       showToast(`تمت إضافة "${prod.name}" للسلة`);
     }
@@ -284,13 +338,11 @@
       }
       
       const p = products.find(item => item.id === id);
-      if (!p) {
-        return showToast("عذراً، هذا المنتج غير متوفر حالياً");
-      }
+      if (!p) return showToast("عذراً، هذا المنتج غير متوفر حالياً");
 
       const unitPrice = parseFloat(p.discountPrice || p.price);
 
-      let message = `🌸 *طلب جديد من متجر لمسة شمع* 🌸\n`;
+      let message = `🌸 *طلب جديد من المتجر* 🌸\n`;
       message += `-----------------------------------\n`;
       message += `🕯️ *المنتج:* ${p.name}\n`;
       message += `🔹 *الكمية:* 1\n`;
@@ -340,9 +392,7 @@
 
     window.updateQuantity = function(index, change) {
       cart[index].quantity += change;
-      if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
-      }
+      if (cart[index].quantity <= 0) cart.splice(index, 1);
       updateCartBadge();
       openCart();
     }
@@ -361,17 +411,6 @@
         return showToast("هناك تحديث على المعلومات والأسعار، يمكن الطلب لاحقاً");
       }
 
-      for (let item of cart) {
-        const stillExists = products.some(p => p.id === item.product.id);
-        if (!stillExists) {
-          showToast(`عذراً، المنتج "${item.product.name}" غير متوفر حالياً`);
-          cart = cart.filter(cItem => cItem.product.id !== item.product.id);
-          updateCartBadge();
-          openCart();
-          return;
-        }
-      }
-
       let grandTotal = 0;
       let itemsListText = "";
 
@@ -383,15 +422,13 @@
         itemsListText += `${i + 1}. *${item.product.name}*\n`;
         itemsListText += `   🔹 *الكمية:* ${item.quantity}\n`;
         itemsListText += `   🔹 *سعر القطعة:* ${unitPrice} TL\n`;
-        
-        // إظهار سطر الإجمالي الفرعي فقط إذا كانت الكمية 2 فأكثر
         if (item.quantity > 1) {
           itemsListText += `   💵 *سعر ${getQuantityText(item.quantity)}:* ${itemTotal} TL\n`;
         }
         itemsListText += `\n`;
       });
 
-      let summary = `🌸 *طلب جديد من متجر لمسة شمع* 🌸\n`;
+      let summary = `🌸 *طلب جديد من المتجر* 🌸\n`;
       summary += `-----------------------------------\n\n`;
       summary += itemsListText;
       summary += `-----------------------------------\n`;
