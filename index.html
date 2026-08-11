@@ -4,83 +4,146 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title id="pageTitle">لمسة شمع | Candle Touch</title>
-  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@700&family=Cairo:wght@400;600;700;800&family=El+Messiri:wght@700&family=Reem+Kufi:wght@700&family=Tajawal:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@700&family=Amiri:wght@700&family=Aref+Ruqaa:wght@700&family=Cairo:wght@400;600;700;800&family=Changa:wght@600;800&family=El+Messiri:wght@700&family=Harmattan:wght@700&family=Katibeh&family=Kufam:wght@700&family=Lalezar&family=Lemonada:wght@600&family=Mada:wght@700&family=Markazi+Text:wght@700&family=Readex+Pro:wght@600&family=Reem+Kufi:wght@700&family=Rakkas&family=Scheherazade+New:wght@700&family=Tajawal:wght@700&family=Vazirmatn:wght@700&display=swap" rel="stylesheet">
+  
   <style id="dynamicStyles">
-    :root { --primary-pink: #f4b6c2; --deep-pink: #d9788f; --bg-cream: #fff5f6; }
-    * { box-sizing: border-box; font-family: 'Cairo', sans-serif; transition: background 0.2s, color 0.2s; }
-    body { background: var(--bg-cream); margin: 0; padding-bottom: 60px; color: #4a3e3d; overflow-x: hidden; }
+    :root { 
+      --primary-pink: #f4b6c2; 
+      --deep-pink: #d9788f; 
+      --bg-cream: #fff5f6; 
+      --store-font: 'Cairo', sans-serif;
+      --btn-radius: 12px;
+      --btn-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    
+    * { box-sizing: border-box; font-family: var(--store-font); transition: transform 0.25s ease, background 0.25s, color 0.25s, box-shadow 0.25s; }
+    body { background: var(--bg-cream); margin: 0; padding-bottom: 70px; color: #4a3e3d; overflow-x: hidden; }
 
-    .top-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(255, 255, 255, 0.95); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    .nav-title { font-size: 15px; font-weight: 800; color: var(--deep-pink); }
+    .lock-screen {
+      position: fixed; inset: 0; background: linear-gradient(135deg, #2b1118 0%, #541e2b 50%, #2b1118 100%);
+      z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px; text-align: center; color: white; backdrop-filter: blur(10px);
+    }
+    .lock-card {
+      background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 24px; padding: 30px 20px; max-width: 340px; width: 100%;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.1);
+      transform: perspective(1000px) rotateX(5deg);
+      animation: floatLock 4s ease-in-out infinite alternate;
+    }
+    @keyframes floatLock { from { transform: perspective(1000px) rotateX(5deg) translateY(0); } to { transform: perspective(1000px) rotateX(-3deg) translateY(-12px); } }
+    
+    .lock-candle { font-size: 60px; filter: drop-shadow(0 0 15px #f4b6c2); animation: pulseGlow 2s infinite alternate; }
+    @keyframes pulseGlow { from { filter: drop-shadow(0 0 10px #f4b6c2); transform: scale(1); } to { filter: drop-shadow(0 0 25px #ffd1dc); transform: scale(1.08); } }
+    
+    .lock-btn {
+      margin-top: 20px; background: linear-gradient(135deg, var(--primary-pink), var(--deep-pink));
+      border: none; color: white; padding: 12px 30px; border-radius: 25px; font-weight: 800; font-size: 15px;
+      cursor: pointer; box-shadow: 0 10px 20px rgba(217,120,143,0.4); width: 80%;
+    }
+
+    .top-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: rgba(255, 255, 255, 0.92); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(8px); box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .nav-title { font-size: 16px; font-weight: 800; color: var(--deep-pink); display: flex; align-items: center; gap: 6px; }
     .nav-actions { display: flex; gap: 8px; align-items: center; }
     
-    .icon-btn { background: #ffffff; border: 1px solid #f2c4d0; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; position: relative; text-decoration: none; color: inherit; }
-    
+    .icon-btn { background: #ffffff; border: 1px solid #f2c4d0; width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; position: relative; text-decoration: none; color: inherit; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
     .insta-btn { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%,#d6249f 60%,#285AEB 90%); border: none; }
     .insta-btn svg { width: 18px; height: 18px; fill: white; }
 
     .badge { position: absolute; top: -3px; right: -3px; background: var(--deep-pink); color: white; border-radius: 50%; font-size: 9px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-    .search-box { display: none; padding: 6px 12px; background: #fff; border-bottom: 1px solid #f2d6dc; }
-    .search-box input { width: 100%; padding: 6px 12px; border-radius: 15px; border: 1px solid #e0b8c0; outline: none; font-size: 12px; }
+    .search-box { display: none; padding: 8px 12px; background: #fff; border-bottom: 1px solid #f2d6dc; }
+    .search-box input { width: 100%; padding: 8px 14px; border-radius: 20px; border: 1px solid #e0b8c0; outline: none; font-size: 12px; }
 
-    .hero-banner { background: linear-gradient(135deg, var(--primary-pink) 0%, #f3cad2 100%); margin: 8px 12px; padding: 14px 10px; border-radius: 15px; text-align: center; }
-    .hero-title { font-family: 'Reem Kufi', sans-serif; font-size: 24px; color: var(--deep-pink); margin: 0; }
-    .hero-sub { font-size: 11px; color: #8a5763; margin-top: 3px; font-weight: 600; }
+    .hero-banner { 
+      background: linear-gradient(135deg, var(--primary-pink) 0%, #f3cad2 100%); 
+      margin: 10px 12px; padding: 16px 12px; border-radius: 18px; text-align: center;
+      box-shadow: var(--btn-shadow); position: relative; overflow: hidden;
+    }
+    .hero-title { font-family: var(--store-font); font-size: 24px; color: var(--deep-pink); margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .hero-sub { font-size: 12px; color: #73414d; margin-top: 4px; font-weight: 700; }
 
-    /* بنر العروض والمناسبات */
-    .offer-banner { display: none; background: #fff0f3; border: 2px dashed var(--deep-pink); margin: 8px 12px; padding: 10px; border-radius: 12px; text-align: center; }
-    .offer-title { font-weight: 800; color: var(--deep-pink); font-size: 13px; }
-    .offer-desc { font-size: 11px; color: #555; margin-top: 3px; }
+    .offer-banner { 
+      display: none; background: linear-gradient(135deg, #ffffff 0%, #fff0f3 100%); 
+      border: 2px dashed var(--deep-pink); margin: 10px 12px; padding: 14px; border-radius: 18px; text-align: center;
+      position: relative; box-shadow: 0 8px 20px rgba(217,120,143,0.15); transform-style: preserve-3d;
+    }
+    .offer-badge-3d { position: absolute; top: -12px; right: 15px; background: var(--deep-pink); color: white; padding: 3px 12px; border-radius: 12px; font-size: 10px; font-weight: bold; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    .offer-title { font-weight: 800; color: var(--deep-pink); font-size: 15px; margin-top: 4px; }
+    .offer-desc { font-size: 11px; color: #555; margin-top: 4px; line-height: 1.4; }
 
     .container { padding: 0 12px; }
-    .section-title { font-size: 14px; font-weight: 700; color: var(--deep-pink); margin: 12px 0 8px; display: flex; align-items: center; justify-content: space-between; }
+    .section-title { font-size: 14px; font-weight: 800; color: var(--deep-pink); margin: 14px 0 10px; display: flex; align-items: center; justify-content: space-between; }
 
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .card { background: #ffffff; border-radius: 14px; padding: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #f5e1e5; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
-    .card img { width: 100%; height: 110px; object-fit: cover; border-radius: 10px; cursor: pointer; }
-    .card-title { font-weight: 700; font-size: 13px; margin: 6px 0 2px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .card { 
+      background: #ffffff; border-radius: 16px; padding: 10px; 
+      box-shadow: 0 6px 16px rgba(0,0,0,0.04); border: 1px solid #f5e1e5; 
+      position: relative; display: flex; flex-direction: column; justify-content: space-between;
+      transform-style: preserve-3d; perspective: 1000px;
+    }
+    .card:hover { transform: translateY(-4px) rotateX(2deg) rotateY(-2deg); box-shadow: 0 12px 24px rgba(217,120,143,0.18); }
+    .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; cursor: pointer; }
+    .card-title { font-weight: 800; font-size: 13px; margin: 6px 0 2px; color: #333; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .card-desc { font-size: 10px; color: #777; margin-bottom: 6px; height: 26px; overflow: hidden; line-height: 1.3; }
     
-    .price-box { margin-bottom: 6px; }
+    .price-box { margin-bottom: 8px; }
     .old-price { text-decoration: line-through; font-size: 10px; color: #999; display: block; margin-bottom: -2px; }
     .curr-price { font-weight: 800; font-size: 14px; color: var(--deep-pink); }
     
-    .btn-group { display: flex; gap: 4px; }
-    .btn-action { flex: 1; padding: 7px 4px; border: none; border-radius: 8px; font-weight: bold; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 2px; }
+    .btn-group { display: flex; gap: 6px; }
+    .btn-action { 
+      flex: 1; padding: 8px 4px; border: none; border-radius: var(--btn-radius); 
+      font-weight: bold; font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 2px;
+      box-shadow: var(--btn-shadow);
+    }
     .btn-cart { background: var(--primary-pink); color: #fff; }
     .btn-buy { background: #25D366; color: #fff; }
 
-    /* تأثير تساقط العناصر */
-    .hearts-container { position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden; display: none; }
-    .heart { position: absolute; font-size: 14px; animation: fall 4s linear infinite; top: -20px; }
-    @keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
+    /* أنماط الأزرار المخصصة 3D والنيون */
+    .btn-shape-3d { border-bottom: 4px solid rgba(0,0,0,0.2) !important; transform: translateY(-2px); }
+    .btn-shape-3d:active { transform: translateY(1px); border-bottom-width: 1px !important; }
+    .btn-shape-neon { box-shadow: 0 0 10px var(--deep-pink) !important; }
 
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); z-index: 200; justify-content: center; align-items: center; padding: 15px; }
-    .modal-content { background: #fff; width: 100%; max-width: 360px; border-radius: 18px; padding: 15px; max-height: 85vh; display: flex; flex-direction: column; }
-    .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 12px; }
-    .cart-item img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
+    .particles-container { position: fixed; inset: 0; pointer-events: none; z-index: 999; overflow: hidden; display: none; }
+    .particle { position: absolute; font-size: 18px; animation: fallAnim 4s linear infinite; top: -30px; }
+    @keyframes fallAnim { to { transform: translateY(105vh) rotate(360deg); } }
+
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); z-index: 200; justify-content: center; align-items: center; padding: 15px; }
+    .modal-content { background: #fff; width: 100%; max-width: 380px; border-radius: 20px; padding: 18px; max-height: 85vh; display: flex; flex-direction: column; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    .cart-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 12px; }
+    .cart-item img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
     
-    .qty-controls { display: flex; align-items: center; gap: 6px; background: #fef0f2; border-radius: 6px; padding: 2px 6px; }
-    .qty-btn { border: none; background: none; color: var(--deep-pink); font-weight: bold; font-size: 14px; cursor: pointer; padding: 0 4px; }
+    .qty-controls { display: flex; align-items: center; gap: 6px; background: #fef0f2; border-radius: 8px; padding: 2px 8px; }
+    .qty-btn { border: none; background: none; color: var(--deep-pink); font-weight: bold; font-size: 15px; cursor: pointer; padding: 0 4px; }
     .qty-val { font-size: 11px; font-weight: bold; color: #333; }
 
-    .cart-summary { margin-top: 12px; padding-top: 10px; border-top: 2px dashed var(--primary-pink); display: flex; justify-content: space-between; font-weight: bold; font-size: 13px; color: var(--deep-pink); }
-    .btn-checkout { background: #25D366; color: white; border: none; width: 100%; padding: 10px; border-radius: 10px; font-weight: bold; font-size: 13px; margin-top: 10px; cursor: pointer; }
+    .cart-summary { margin-top: 12px; padding-top: 10px; border-top: 2px dashed var(--primary-pink); display: flex; flex-direction: column; gap: 4px; font-weight: bold; font-size: 13px; color: var(--deep-pink); }
+    .discount-line { color: #27ae60; font-size: 11px; display: flex; justify-content: space-between; }
+    .btn-checkout { background: #25D366; color: white; border: none; width: 100%; padding: 12px; border-radius: var(--btn-radius); font-weight: bold; font-size: 13px; margin-top: 10px; cursor: pointer; box-shadow: 0 6px 15px rgba(37,211,102,0.3); }
 
-    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; justify-content: center; align-items: center; flex-direction: column; padding: 15px; }
-    .lightbox img { max-width: 90%; max-height: 80vh; border-radius: 15px; }
-    .lightbox-close { margin-top: 15px; background: var(--deep-pink); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88); z-index: 300; justify-content: center; align-items: center; flex-direction: column; padding: 15px; }
+    .lightbox img { max-width: 90%; max-height: 75vh; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+    .lightbox-close { margin-top: 15px; background: var(--deep-pink); color: white; border: none; padding: 10px 24px; border-radius: 20px; font-weight: bold; cursor: pointer; }
 
-    #toast { visibility: hidden; min-width: 250px; background-color: var(--deep-pink); color: #fff; text-align: center; border-radius: 20px; padding: 10px 14px; position: fixed; z-index: 400; left: 50%; bottom: 20px; transform: translateX(-50%); font-size: 12px; font-weight: bold; }
+    #toast { visibility: hidden; min-width: 250px; background-color: var(--deep-pink); color: #fff; text-align: center; border-radius: 25px; padding: 12px 18px; position: fixed; z-index: 400; left: 50%; bottom: 25px; transform: translateX(-50%); font-size: 12px; font-weight: bold; box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
     #toast.show { visibility: visible; animation: fadein 0.3s, fadeout 0.3s 2.7s; }
-    @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 20px; opacity: 1;} }
-    @keyframes fadeout { from {bottom: 20px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 25px; opacity: 1;} }
+    @keyframes fadeout { from {bottom: 25px; opacity: 1;} to {bottom: 0; opacity: 0;} }
   </style>
 </head>
 <body>
 
-  <div class="hearts-container" id="heartsContainer"></div>
+  <div class="lock-screen" id="lockScreen">
+    <div class="lock-card">
+      <div class="lock-candle">🕯️</div>
+      <h2 style="margin: 10px 0 5px; font-size: 22px;" id="lockStoreTitle">لمسة شمع</h2>
+      <p style="font-size: 12px; color: #ffd1dc; margin-bottom: 15px;" id="lockStoreSub">✨ عالم العطور والدفء بانتظارك ✨</p>
+      <button class="lock-btn" onclick="enterStore()">دخول المتجر 🌸</button>
+    </div>
+  </div>
+
+  <div class="particles-container" id="particlesContainer"></div>
 
   <div class="top-header">
     <div class="nav-title" id="navTitle">🌸 لمسة شمع</div>
@@ -103,9 +166,10 @@
     <div class="hero-sub" id="heroSub">✨ نور.. يلامس قلبك ✨</div>
   </div>
 
-  <!-- بنر العروض الترويجية -->
   <div class="offer-banner" id="offerBanner">
-    <div class="offer-title" id="offerTitleText">🎉 عرض خاص</div>
+    <div class="offer-badge-3d" id="offerBadge">🎉 عرض الموسم</div>
+    <div style="font-size: 28px; margin-bottom: 2px;">🎁✨</div>
+    <div class="offer-title" id="offerTitleText">عرض خاص</div>
     <div class="offer-desc" id="offerDescText"></div>
   </div>
 
@@ -129,11 +193,19 @@
         <button onclick="closeCart()" style="border:none; background:none; font-size:16px; cursor:pointer;">❌</button>
       </div>
       <div id="cartItemsList" style="margin-top:10px; overflow-y:auto; flex:1;"></div>
-      <div class="cart-summary" id="cartTotalSummary">
-        <span>المجموع الكلي:</span>
-        <span id="cartTotalPrice">0 TL</span>
+      
+      <div class="cart-summary">
+        <div class="discount-line" id="discountRow" style="display:none;">
+          <span id="discountLabel">خصم العرض:</span>
+          <span id="discountVal">-0 TL</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-top:1px solid #eee; padding-top:6px; margin-top:2px; font-size:15px; color:var(--deep-pink);">
+          <span>المجموع النهائي:</span>
+          <span id="cartTotalPrice">0 TL</span>
+        </div>
       </div>
-      <button class="btn-checkout" onclick="checkoutAll()">إرسال الطلب الكامل عبر الواتساب 💬</button>
+
+      <button class="btn-checkout" onclick="checkoutAll()">إرسال الطلب عبر الواتساب 💬</button>
     </div>
   </div>
 
@@ -161,6 +233,12 @@
     let cart = [];
     let favorites = [];
     let showOnlyFavs = false;
+    let globalOffer = { active: false, title: "", desc: "", discountPercent: 0, minSpend: 0 };
+    let currentBtnShapeClass = "";
+
+    window.enterStore = function() {
+      document.getElementById("lockScreen").style.display = "none";
+    }
 
     function getQuantityText(num) {
       const numbersInArabic = {
@@ -170,7 +248,6 @@
       return numbersInArabic[num] || `${num} قطع`;
     }
 
-    // الاستماع اللحظي للتعديلات
     onValue(ref(db, 'settings'), (snapshot) => {
       const data = snapshot.val() || {};
       whatsappNumber = data.whatsapp || "";
@@ -178,39 +255,60 @@
       if(data.storeName) {
         document.getElementById("navTitle").innerText = "🌸 " + data.storeName;
         document.getElementById("heroTitle").innerText = data.storeName;
+        document.getElementById("lockStoreTitle").innerText = data.storeName;
         document.title = data.storeName;
       }
       if(data.storeSub) {
         document.getElementById("heroSub").innerText = data.storeSub;
+        document.getElementById("lockStoreSub").innerText = data.storeSub;
       }
 
-      // تطبيق الألوان والخطوط ديناميكياً
       if(data.theme) {
         const root = document.documentElement;
         root.style.setProperty('--primary-pink', data.theme.primary || '#f4b6c2');
         root.style.setProperty('--deep-pink', data.theme.deep || '#d9788f');
         root.style.setProperty('--bg-cream', data.theme.bg || '#fff5f6');
-        if(data.theme.font) document.body.style.fontFamily = data.theme.font;
+        
+        if(data.theme.font) {
+          root.style.setProperty('--store-font', data.theme.font);
+          document.body.style.fontFamily = data.theme.font;
+        }
 
-        // تفعيل تأثير تساقط القلوب
-        if(data.theme.effectSnow) {
-          startHeartsEffect();
+        currentBtnShapeClass = "";
+        if(data.theme.btnShape) {
+          switch(data.theme.btnShape) {
+            case 'pill': root.style.setProperty('--btn-radius', '25px'); break;
+            case '3d': currentBtnShapeClass = "btn-shape-3d"; break;
+            case 'neon': currentBtnShapeClass = "btn-shape-neon"; break;
+            default: root.style.setProperty('--btn-radius', '12px'); break;
+          }
+        }
+
+        if(data.theme.effectType && data.theme.effectType !== 'none') {
+          startParticles(data.theme.effectType);
         } else {
-          stopHeartsEffect();
+          stopParticles();
         }
       }
 
-      // تفعيل بنر العروض
       if(data.offer && data.offer.active) {
+        globalOffer = {
+          active: true,
+          title: data.offer.title || "🎉 عرض خاص",
+          desc: data.offer.desc || "",
+          discountPercent: parseFloat(data.offer.discountPercent || 0),
+          minSpend: parseFloat(data.offer.minSpend || 0)
+        };
         document.getElementById("offerBanner").style.display = "block";
-        document.getElementById("offerTitleText").innerText = data.offer.title || "🎉 عرض خاص";
-        document.getElementById("offerDescText").innerText = data.offer.desc || "";
+        document.getElementById("offerTitleText").innerText = globalOffer.title;
+        document.getElementById("offerDescText").innerText = globalOffer.desc;
       } else {
+        globalOffer = { active: false, discountPercent: 0, minSpend: 0 };
         document.getElementById("offerBanner").style.display = "none";
       }
+      renderGrid();
     });
 
-    // جلب المنتجات
     onValue(ref(db, 'products'), (snapshot) => {
       const data = snapshot.val();
       products = [];
@@ -222,22 +320,28 @@
       renderGrid();
     });
 
-    function startHeartsEffect() {
-      const container = document.getElementById("heartsContainer");
+    function startParticles(type) {
+      const container = document.getElementById("particlesContainer");
       container.style.display = "block";
-      if(container.childElementCount > 0) return;
-      for(let i = 0; i < 15; i++) {
-        const h = document.createElement("div");
-        h.className = "heart";
-        h.innerText = ["🌸", "💖", "✨", "🕯️"][Math.floor(Math.random() * 4)];
-        h.style.left = Math.random() * 100 + "vw";
-        h.style.animationDuration = (Math.random() * 3 + 2) + "s";
-        h.style.animationDelay = Math.random() * 2 + "s";
-        container.appendChild(h);
+      container.innerHTML = "";
+      
+      let symbols = ["🌸", "💖", "✨", "🕯️"];
+      if(type === 'snow') symbols = ["❄️", "✨", "🤍"];
+      if(type === 'holiday') symbols = ["🎉", "🎁", "⭐", "🎄", "🕯️"];
+
+      for(let i = 0; i < 20; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.innerText = symbols[Math.floor(Math.random() * symbols.length)];
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.animationDuration = (Math.random() * 3 + 2.5) + "s";
+        p.style.animationDelay = Math.random() * 2 + "s";
+        container.appendChild(p);
       }
     }
-    function stopHeartsEffect() {
-      const container = document.getElementById("heartsContainer");
+
+    function stopParticles() {
+      const container = document.getElementById("particlesContainer");
       container.style.display = "none";
       container.innerHTML = "";
     }
@@ -264,7 +368,7 @@
 
         grid.innerHTML += `
           <div class="card">
-            <button class="icon-btn" style="position:absolute; top:12px; left:12px; width:26px; height:26px; font-size:11px;" onclick="toggleFav(${p.id})">
+            <button class="icon-btn" style="position:absolute; top:10px; left:10px; width:28px; height:28px; font-size:11px;" onclick="toggleFav(${p.id})">
               ${isFav ? '💖' : '🤍'}
             </button>
             <img src="${p.img || 'https://via.placeholder.com/150'}" alt="${p.name}" onclick="zoomImage('${p.img}')">
@@ -272,8 +376,8 @@
             <div class="card-desc">${p.desc || ''}</div>
             <div class="price-box">${discountHTML}</div>
             <div class="btn-group">
-              <button class="btn-action btn-cart" onclick="addToCart(${p.id})">🛒 للسلة</button>
-              <button class="btn-action btn-buy" onclick="singleOrder(${p.id})">💬 طلب</button>
+              <button class="btn-action btn-cart ${currentBtnShapeClass}" onclick="addToCart(${p.id})">🛒 للسلة</button>
+              <button class="btn-action btn-buy ${currentBtnShapeClass}" onclick="singleOrder(${p.id})">💬 طلب</button>
             </div>
           </div>
         `;
@@ -289,7 +393,7 @@
 
     window.addToCart = function(id) {
       const prod = products.find(p => p.id === id);
-      if(!prod) return showToast("عذراً، هذا المنتج غير متوفر حالياً");
+      if(!prod) return showToast("عذراً، المنتج غير متوفر");
 
       const existingItem = cart.find(item => item.product.id === id);
       if (existingItem) {
@@ -334,21 +438,30 @@
 
     window.singleOrder = function(id) {
       if (!whatsappNumber || whatsappNumber.trim() === "") {
-        return showToast("هناك تحديث على المعلومات والأسعار، يمكن الطلب لاحقاً");
+        return showToast("تحديث بالمعلومات والأسعار، يمكن الطلب لاحقاً");
       }
       
       const p = products.find(item => item.id === id);
-      if (!p) return showToast("عذراً، هذا المنتج غير متوفر حالياً");
+      if (!p) return showToast("المنتج غير متوفر حالياً");
 
-      const unitPrice = parseFloat(p.discountPrice || p.price);
+      let subtotal = parseFloat(p.discountPrice || p.price);
+      let finalTotal = subtotal;
+      let discountText = "";
+
+      if(globalOffer.active && globalOffer.discountPercent > 0 && subtotal >= globalOffer.minSpend) {
+        const discountAmount = (subtotal * globalOffer.discountPercent) / 100;
+        finalTotal = subtotal - discountAmount;
+        discountText = `🎁 *خصم العرض (${globalOffer.discountPercent}%):* -${discountAmount.toFixed(2)} TL\n`;
+      }
 
       let message = `🌸 *طلب جديد من المتجر* 🌸\n`;
       message += `-----------------------------------\n`;
       message += `🕯️ *المنتج:* ${p.name}\n`;
       message += `🔹 *الكمية:* 1\n`;
-      message += `🔹 *سعر القطعة:* ${unitPrice} TL\n`;
+      message += `🔹 *السعر:* ${subtotal} TL\n`;
+      if(discountText) message += discountText;
       message += `-----------------------------------\n`;
-      message += `✨ *المجموع الكلي للفاتورة: ${unitPrice} TL*`;
+      message += `✨ *المجموع النهائي: ${finalTotal.toFixed(2)} TL*`;
 
       const orderText = encodeURIComponent(message);
       window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${orderText}`, '_blank');
@@ -357,24 +470,28 @@
     window.openCart = function() {
       const list = document.getElementById("cartItemsList");
       list.innerHTML = "";
-      let grandTotal = 0;
+      let subtotal = 0;
 
       if (cart.length === 0) {
         list.innerHTML = "<p style='text-align:center; font-size:12px; color:#888;'>السلة فارغة حالياً.</p>";
         document.getElementById("cartTotalPrice").innerText = "0 TL";
+        document.getElementById("discountRow").style.display = "none";
       } else {
         cart.forEach((item, index) => {
           const unitPrice = parseFloat(item.product.discountPrice || item.product.price);
           const itemTotal = unitPrice * item.quantity;
-          grandTotal += itemTotal;
+          subtotal += itemTotal;
+
+          const priceDetails = item.quantity > 1 
+            ? `سعر (${getQuantityText(item.quantity)}): <strong style="color:var(--deep-pink);">${itemTotal.toFixed(2)} TL</strong>` 
+            : `السعر: <strong style="color:var(--deep-pink);">${unitPrice} TL</strong>`;
 
           list.innerHTML += `
             <div class="cart-item">
               <img src="${item.product.img || 'https://via.placeholder.com/150'}" alt="${item.product.name}">
               <div style="flex:1; margin:0 8px;">
                 <div style="font-weight:bold; color:#333;">${item.product.name}</div>
-                <div style="color:#888; font-size:10px;">سعر القطعة: ${unitPrice} TL</div>
-                <div style="color:var(--deep-pink); font-weight:bold; font-size:11px;">الإجمالي: ${itemTotal} TL</div>
+                <div style="font-size:11px; margin-top:2px;">${priceDetails}</div>
               </div>
               <div class="qty-controls">
                 <button class="qty-btn" onclick="updateQuantity(${index}, -1)">-</button>
@@ -385,7 +502,19 @@
             </div>
           `;
         });
-        document.getElementById("cartTotalPrice").innerText = `${grandTotal} TL`;
+
+        let finalTotal = subtotal;
+        if(globalOffer.active && globalOffer.discountPercent > 0 && subtotal >= globalOffer.minSpend) {
+          const discountVal = (subtotal * globalOffer.discountPercent) / 100;
+          finalTotal = subtotal - discountVal;
+          document.getElementById("discountLabel").innerText = `خصم العرض (${globalOffer.discountPercent}%):`;
+          document.getElementById("discountVal").innerText = `-${discountVal.toFixed(2)} TL`;
+          document.getElementById("discountRow").style.display = "flex";
+        } else {
+          document.getElementById("discountRow").style.display = "none";
+        }
+
+        document.getElementById("cartTotalPrice").innerText = `${finalTotal.toFixed(2)} TL`;
       }
       document.getElementById("cartModal").style.display = "flex";
     }
@@ -408,31 +537,42 @@
     window.checkoutAll = function() {
       if (cart.length === 0) return showToast("السلة فارغة!");
       if (!whatsappNumber || whatsappNumber.trim() === "") {
-        return showToast("هناك تحديث على المعلومات والأسعار، يمكن الطلب لاحقاً");
+        return showToast("تحديث بالمعلومات والأسعار، يمكن الطلب لاحقاً");
       }
 
-      let grandTotal = 0;
+      let subtotal = 0;
       let itemsListText = "";
 
       cart.forEach((item, i) => {
         const unitPrice = parseFloat(item.product.discountPrice || item.product.price);
         const itemTotal = unitPrice * item.quantity;
-        grandTotal += itemTotal;
+        subtotal += itemTotal;
 
         itemsListText += `${i + 1}. *${item.product.name}*\n`;
         itemsListText += `   🔹 *الكمية:* ${item.quantity}\n`;
-        itemsListText += `   🔹 *سعر القطعة:* ${unitPrice} TL\n`;
         if (item.quantity > 1) {
           itemsListText += `   💵 *سعر ${getQuantityText(item.quantity)}:* ${itemTotal} TL\n`;
+        } else {
+          itemsListText += `   💵 *السعر:* ${unitPrice} TL\n`;
         }
         itemsListText += `\n`;
       });
+
+      let finalTotal = subtotal;
+      let discountText = "";
+
+      if(globalOffer.active && globalOffer.discountPercent > 0 && subtotal >= globalOffer.minSpend) {
+        const discountVal = (subtotal * globalOffer.discountPercent) / 100;
+        finalTotal = subtotal - discountVal;
+        discountText = `🎁 *خصم العرض التلقائي (${globalOffer.discountPercent}%):* -${discountVal.toFixed(2)} TL\n`;
+      }
 
       let summary = `🌸 *طلب جديد من المتجر* 🌸\n`;
       summary += `-----------------------------------\n\n`;
       summary += itemsListText;
       summary += `-----------------------------------\n`;
-      summary += `✨ *المجموع الكلي للفاتورة: ${grandTotal} TL*`;
+      if(discountText) summary += discountText;
+      summary += `✨ *المجموع النهائي: ${finalTotal.toFixed(2)} TL*`;
 
       const encodedText = encodeURIComponent(summary);
       window.open(`https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodedText}`, '_blank');
